@@ -1,0 +1,6 @@
+object:img/default.png
+player:img/gangsta_gun.png
+wall:img/bric.png
+bullet:img/big_ammo.png
+item:img/flare.png
+shotgun_giver:img/shotgun.png
