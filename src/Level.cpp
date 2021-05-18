@@ -1,5 +1,6 @@
 #include "Level.hpp"
 #include "WeaponGiver.hpp"
+#include "Mob.hpp"
 #include <iostream>
 
 using namespace std;
@@ -159,6 +160,13 @@ void Level::generate(int dimension,int proportion)
 				}
 				wG->setSize(Vector2f(128,64));
 				world.push_back(wG);
+			}
+			if(rand()%20==0)
+			{
+				Mob * m = new Mob("generated",Vector2f(x*500+200,y*500+200));
+				m->setGun(Rifle());
+				m->setSize(Vector2f(100,100));
+				world.push_back(m);
 			}
 			
 			if(x==0 || (rooms[y][x]==true && x>0 && rooms[y][x-1]==false))

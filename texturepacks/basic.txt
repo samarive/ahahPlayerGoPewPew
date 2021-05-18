@@ -4,3 +4,4 @@ wall:img/bric.png
 bullet:img/big_ammo.png
 item:img/flare.png
 shotgun_giver:img/shotgun.png
+mob:img/blue_man.png

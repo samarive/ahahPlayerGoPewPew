@@ -22,9 +22,12 @@ using namespace sf;
 /*
 	TODO
 	
-	-[If bored] Add some collectibles (Items on ground)
-	-Bad guys (essentially hurting walls)
-	-Natural spawn in level generation
+	-Add some collectibles (Items on ground)
+	-MORE BAD GUYS
+	-More ammo
+	-More weapons
+	-Eventually implement multiplayer
+
 */
 
 
@@ -36,9 +39,9 @@ int main()
 	basic.load("texturepacks/basic.txt");
 	Object::texturePack = &basic;
 	Level lvl;
-	lvl.generate(100,3);
+	lvl.generate(rand()%50+1,rand()%5+1);
 
-	RenderWindow win (VideoMode(800,450),"fenetre",Style::Fullscreen);
+	RenderWindow win (VideoMode(800,450),"Player go PEW ! PEW !",Style::Fullscreen);
 	win.setFramerateLimit(60);
 
 	
@@ -49,6 +52,11 @@ int main()
 		{
 			lvl.passEvent(event);
 			if(event.type==Event::Closed)win.close();
+			if(event.type==Event::KeyPressed && event.key.code==Keyboard::R)
+			{
+				lvl.empty();
+				lvl.generate(rand()%50+1,rand()%5+1);
+			}
 		}
 
 		lvl.tick();

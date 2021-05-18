@@ -42,11 +42,28 @@ bool Bullet::collide(Object & arg)
 		setHealth(0);
 		arg.suffer(damages);
 
+		if(arg.toString().find("wall")!=string::npos)
+		{
+			Vector2f diff (getPosition()-arg.getPosition());
+		
+			if(arg.getLocalBounds().width>arg.getLocalBounds().height)
+			{
+				if(diff.y>0)arg.rotate(-diff.x/25.f);
+				if(diff.y<0)arg.rotate(diff.x/25.f);
+			}
+			if(arg.getLocalBounds().width<arg.getLocalBounds().height)
+			{
+				if(diff.x>0)arg.rotate(diff.y/25.f);
+				if(diff.x<0)arg.rotate(-diff.y/25.f);
+			}
+		}
+
 		return true;
 	}
-	else if(owner==nullptr)
+	else if(Object::collide (arg) && owner==nullptr)
 	{
 		owner = &arg;
+		
 		setSpeed(Vector2f(cos(angleDerivation+arg.getRotation()*(3.141592654f/180.f))*velocity,sin(angleDerivation+arg.getRotation()*(3.141592654f/180.f))*velocity));
 		setRotation(arg.getRotation()+angleDerivation*(180.f/3.141592654f));
 	}

@@ -28,6 +28,7 @@ public:
 
 	virtual std::string toString() const;//Returns lower case class name + lower case parent toString (convention)
 	std::string toShortString() const;
+	std::string getName() const;
 
 	static TexturePack * texturePack;
 

@@ -43,6 +43,10 @@ public:
 	virtual void update();
 	virtual std::string toString() const;
 	virtual bool collide(Object & arg);
+protected:
+
+	float getVelocity() const;
+	void setAction(Action arg);
 
 private:
 

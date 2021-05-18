@@ -2,6 +2,7 @@
 #include "Item.hpp"
 #include <exception>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 using namespace sf;
@@ -37,46 +38,7 @@ void Player::treatEvent(Event const& arg)
 	{
 		Action toDo (bindings.at(dE));
 
-		switch(toDo)
-		{
-			case Action::None:
-				setSpeed(Vector2f(0,0));
-			break;
-			case Action::MoveRight:
-				setSpeed(Vector2f(velocity,getSpeed().y));
-			break;
-			case Action::MoveUp:
-				setSpeed(Vector2f(getSpeed().x,-velocity));
-			break;
-			case Action::MoveLeft:
-				setSpeed(Vector2f(-velocity,getSpeed().y));
-			break;
-			case Action::MoveDown:
-				setSpeed(Vector2f(getSpeed().x,velocity));
-			break;
-			case Action::StopHorizontal:
-				setSpeed(Vector2f(0.f,getSpeed().y));
-			break;
-			case Action::StopVertical:
-				setSpeed(Vector2f(getSpeed().x,0.f));
-			break;
-			case Action::RotatePos:
-				rotSpeed = velocity;
-			break;
-			case Action::RotateNeg:
-				rotSpeed = -velocity;
-			break;
-			case Action::StopRot:
-				rotSpeed = 0.f;
-			break;
-			case Action::Shoot:
-				if(gun!=nullptr)
-				{
-					gun->setBulletModel(ammo);
-					gun->fire(getPosition());
-				}
-			break;
-		}
+		setAction(toDo);
 
 	}catch(exception const& e)
 	{
@@ -125,4 +87,50 @@ bool Player::collide(Object & arg)
 	}
 
 	return toReturn;
+}
+
+float Player::getVelocity() const {return velocity;}
+
+void Player::setAction(Action arg)
+{
+	switch(arg)
+		{
+			case Action::None:
+				setSpeed(Vector2f(0,0));
+			break;
+			case Action::MoveRight:
+				setSpeed(Vector2f(velocity,getSpeed().y));
+			break;
+			case Action::MoveUp:
+				setSpeed(Vector2f(getSpeed().x,-velocity));
+			break;
+			case Action::MoveLeft:
+				setSpeed(Vector2f(-velocity,getSpeed().y));
+			break;
+			case Action::MoveDown:
+				setSpeed(Vector2f(getSpeed().x,velocity));
+			break;
+			case Action::StopHorizontal:
+				setSpeed(Vector2f(0.f,getSpeed().y));
+			break;
+			case Action::StopVertical:
+				setSpeed(Vector2f(getSpeed().x,0.f));
+			break;
+			case Action::RotatePos:
+				rotSpeed = velocity;
+			break;
+			case Action::RotateNeg:
+				rotSpeed = -velocity;
+			break;
+			case Action::StopRot:
+				rotSpeed = 0.f;
+			break;
+			case Action::Shoot:
+				if(gun!=nullptr)
+				{
+					gun->setBulletModel(ammo);
+					gun->fire(getPosition());
+				}
+			break;
+		}
 }

@@ -111,6 +111,8 @@ string Object::toShortString() const
 	return toReturn;
 }
 
+string Object::getName() const {return name;}
+
 bool Object::collide(Object & arg)
 {
 	FloatRect dis (getGlobalBounds());
