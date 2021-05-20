@@ -44,17 +44,35 @@ bool Bullet::collide(Object & arg)
 
 		if(arg.toString().find("wall")!=string::npos)
 		{
-			Vector2f diff (getPosition()-arg.getPosition());
-		
-			if(arg.getLocalBounds().width>arg.getLocalBounds().height)
+			
+
+			Vector2f origin (Vector2f(arg.getGlobalBounds().left,arg.getGlobalBounds().top)+Vector2f(arg.getGlobalBounds().width,arg.getGlobalBounds().height)/2.f);
+
+
+			Vector2f inRef (getGlobalBounds().left+getGlobalBounds().width/2.f,getGlobalBounds().top+getGlobalBounds().height/2.f);
+			inRef-=origin;
+
+	  		float angle (acos(inRef.x/sqrt(pow(inRef.x,2)+pow(inRef.y,2))));
+	  		if(inRef.y<0)angle = -angle;
+	  		angle-=arg.getRotation()*(3.141592654f/180.f);
+
+	  		float norm (sqrt(pow(inRef.x,2)+pow(inRef.y,2)));
+	  		inRef = Vector2f(cos(angle),sin(angle));
+	  		inRef*=norm;
+
+			Object * copy (arg.clone());
+			copy->setRotation(0.f);
+			float width (copy->getGlobalBounds().width);
+			float height (copy->getGlobalBounds().height);
+			delete copy;
+
+			if(width>height)
 			{
-				if(diff.y>0)arg.rotate(-diff.x/25.f);
-				if(diff.y<0)arg.rotate(diff.x/25.f);
+				inRef.y>0?arg.rotate(-45.f*inRef.x*2.f/width):arg.rotate(45.f*inRef.x*2.f/width);
 			}
-			if(arg.getLocalBounds().width<arg.getLocalBounds().height)
+			else
 			{
-				if(diff.x>0)arg.rotate(diff.y/25.f);
-				if(diff.x<0)arg.rotate(-diff.y/25.f);
+				inRef.x>0?arg.rotate(45.f*inRef.y*2.f/height):arg.rotate(-45.f*inRef.y*2.f/height);
 			}
 		}
 

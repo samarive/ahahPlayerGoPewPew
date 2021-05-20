@@ -25,6 +25,7 @@ void Level::tick()
 
 		for(vector<Object*>::iterator i_ (i+1);i_!=world.end();i_++)
 		{
+			if(!isInCam(*i_))continue;
 			(*i_)->collide(*(*i));
 			(*i)->collide(*(*i_));
 		}

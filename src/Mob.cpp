@@ -28,6 +28,8 @@ bool Mob::collide(Object & arg)
 
 	FloatRect oth (arg.getGlobalBounds());
 
+
+	//AI
 	for(int i (0);i<8;i++)
 	{
 		rays[i] = getPosition();
@@ -57,7 +59,10 @@ bool Mob::collide(Object & arg)
 			{
 				Bullet const* b ((Bullet*) &arg);
 
-				if(b->getOwner()!=this)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity());
+				float sign ((float) (rand()%2-1));
+				if(sign==0.f)sign = 1.f;
+
+				if(b->getOwner()!=this)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity()*sign);
 				break;
 			}
 			if(arg.toString().find("wall")!=string::npos)
