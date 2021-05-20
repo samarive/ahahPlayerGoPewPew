@@ -16,6 +16,7 @@ public:
 
 	void setDamages(int arg);
 	void setAngleDerivation(float arg);
+	Object const* getOwner() const;
 
 	//Override
 	virtual void update();

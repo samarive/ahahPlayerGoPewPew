@@ -29,6 +29,7 @@ public:
 	};
 
 	Player(std::string const& arg="Player",sf::Vector2f const& arg0=sf::Vector2f(0.f,0.f)/*Position*/);
+	Player(Player const& arg);
 	virtual ~Player();
 	virtual Player* clone() const;
 

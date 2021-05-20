@@ -73,6 +73,8 @@ bool Bullet::collide(Object & arg)
 
 void Bullet::setDamages(int arg) {damages = arg;}
 void Bullet::setAngleDerivation(float arg) {angleDerivation = arg;}
+Object const* Bullet::getOwner() const {return owner;}
+
 
 void Bullet::setVelocity(float arg) {velocity = arg;}
 

@@ -62,13 +62,13 @@ void Level::paintOn(RenderWindow & arg)
 		light[1].position = world.at(0)->getPosition()+v*1500.f;
 		light[2].position = world.at(0)->getPosition()+w*1500.f;
 
-		light[0].color = Color(255,255,255,50);
-		light[1].color = Color(255,255,255,0);
-		light[2].color = Color(255,255,255,0);
+		light[0].color = Color(255,255,255,100);
+		light[1].color = Color(255,255,255,100);
+		light[2].color = Color(255,255,255,100);
 
 		RectangleShape darkness (Vector2f(1920.f,1080.f));
 		darkness.setPosition(camera.getCenter()-camera.getSize()/2.f);
-		darkness.setFillColor(Color(0,0,0,200));
+		darkness.setFillColor(Color(0,0,0,150));
 
 		arg.draw(darkness);
 		arg.draw(light);

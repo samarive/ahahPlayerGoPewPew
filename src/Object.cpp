@@ -1,5 +1,6 @@
 #include "Object.hpp"
 #include <iostream>
+#include <cmath>
 
 using namespace sf;
 using namespace std;
@@ -115,33 +116,92 @@ string Object::getName() const {return name;}
 
 bool Object::collide(Object & arg)
 {
-	FloatRect dis (getGlobalBounds());
-	FloatRect oth (arg.getGlobalBounds());
 
-	dis.left+=speed.x;
-	dis.top+=speed.y;
-  
-  	if(dis.left>oth.left+oth.width 
-	|| dis.left+dis.width<oth.left      
-	|| dis.top>oth.top+oth.height         
-	|| dis.top+dis.height<oth.top)
-  	{
+	if(arg.getRotation()==0.f)
+	{
+		FloatRect dis (getGlobalBounds());
+		FloatRect oth (arg.getGlobalBounds());
+
+		dis.left+=speed.x;
+		dis.top+=speed.y;
+		  
+		if(dis.left>oth.left+oth.width 
+		|| dis.left+dis.width<oth.left      
+		|| dis.top>oth.top+oth.height         
+		|| dis.top+dis.height<oth.top)
+	  	{
+
+	  		return false;
+	  	}
+	  	else if(arg.toString().find("bullet")==string::npos && toString().find("bullet")==string::npos)
+	  	{
+	  		speed = Vector2f(0.f,0.f);
+	  		return true;
+	  	}
+	  	else
+	  	{
+	  		return true;
+	  	}
+	}
+	else
+	{
+	  	Vector2f origin (Vector2f(arg.getGlobalBounds().left,arg.getGlobalBounds().top)+Vector2f(arg.getGlobalBounds().width,arg.getGlobalBounds().height)/2.f);
 
 
-  		return false;
-  	}
-  	else if(arg.toString().find("bullet")==string::npos && toString().find("bullet")==string::npos)
-  	{
+	  	Object * copy (arg.clone());
+	  	copy->setRotation(0.f);
+	  	Vector2f dimensions (copy->getGlobalBounds().width,copy->getGlobalBounds().height);
+	  	delete copy;
+	  	copy = nullptr;
 
-  		speed = Vector2f(0.f,0.f);
+	  	Object * disCopy ((Object*) clone());
+	  	disCopy->setRotation(0.f);
+	  	Vector2f disDim (disCopy->getGlobalBounds().width,disCopy->getGlobalBounds().height);
+	  	delete disCopy;
+	  	disCopy = nullptr;
 
-  		return true;
-  	}
-  	else
-  	{
-  		return true;
-  	}
 
+	  	Vector2f abscisse (cos(getRotation()*(3.141592654f/180.f)),sin(getRotation()*(3.141592654f/180.f)));
+	  	Vector2f ordonee (-abscisse.y,abscisse.x);
+	  	
+
+
+	  	Vector2f vertex[] = 
+	  	{
+	  		Vector2f(getGlobalBounds().left+getGlobalBounds().width/2.f,getGlobalBounds().top+getGlobalBounds().height/2.f) - abscisse*disDim.x/2.f - ordonee*disDim.y/2.f,
+	  		Vector2f(getGlobalBounds().left+getGlobalBounds().width/2.f,getGlobalBounds().top+getGlobalBounds().height/2.f) + abscisse*disDim.x/2.f - ordonee*disDim.y/2.f,
+	  		Vector2f(getGlobalBounds().left+getGlobalBounds().width/2.f,getGlobalBounds().top+getGlobalBounds().height/2.f) + abscisse*disDim.x/2.f + ordonee*disDim.y/2.f,
+	  		Vector2f(getGlobalBounds().left+getGlobalBounds().width/2.f,getGlobalBounds().top+getGlobalBounds().height/2.f) - abscisse*disDim.x/2.f + ordonee*disDim.y/2.f
+	  	};
+
+	  	for(int i (0);i<4;i++)
+	  	{
+	  		Vector2f inRef (vertex[i]+speed);
+	  		inRef-=origin;
+
+	  		float angle (acos(inRef.x/sqrt(pow(inRef.x,2)+pow(inRef.y,2))));
+	  		if(inRef.y<0)angle = -angle;
+	  		angle-=arg.getRotation()*(3.141592654f/180.f);
+
+	  		float norm (sqrt(pow(inRef.x,2)+pow(inRef.y,2)));
+	  		inRef = Vector2f(cos(angle),sin(angle));
+	  		inRef*=norm;
+
+	  		if(inRef.x<dimensions.x/2.f
+	  		&& inRef.x>-dimensions.x/2.f
+	  		&& inRef.y<dimensions.y/2.f
+	  		&& inRef.y>-dimensions.y/2.f)
+	  		{
+
+	  			if(toString().find("bullet")==string::npos && arg.toString().find("bullet")==string::npos)setSpeed(Vector2f(0.f,0.f));
+
+	  			return true;
+	  		}
+	  	}
+
+	  	return false;
+	  }
 }
+
 
 void Object::setHealth(int arg) {health = arg;}

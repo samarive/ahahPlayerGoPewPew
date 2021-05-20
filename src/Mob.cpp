@@ -53,17 +53,24 @@ bool Mob::collide(Object & arg)
 
 		if(collided)
 		{
+			if(arg.toString().find("bullet")!=string::npos)
+			{
+				Bullet const* b ((Bullet*) &arg);
+
+				if(b->getOwner()!=this)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity());
+				break;
+			}
 			if(arg.toString().find("wall")!=string::npos)
 			{
 				if(traveled<100.f)
 				{
-					setSpeed(-rayDir);//Normal to rayDir
+					setSpeed((-rayDir/rayVelocity)*getVelocity());//Normal to rayDir
 				}
 			}
 			if(arg.toString().find("player")!=string::npos && arg.toString().find("mob")==string::npos)
 			{
-				if(traveled<200)setSpeed(Vector2f(-rayDir.y,rayDir.x));
-				else setSpeed(Vector2f(rayDir.x,rayDir.y));
+				if(traveled<200)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity());
+				else setSpeed((Vector2f(rayDir.x,rayDir.y)/rayVelocity)*getVelocity());
 
 				float diff ((180.f/3.141592654f)*(float) (i)*3.141592654f/4.f - getRotation());
 

@@ -20,6 +20,10 @@ Player::Player(string const& arg,Vector2f const& arg0):Object::Object(arg,arg0),
 		}
 	}
 }
+Player::Player(Player const& arg):Object::Object(arg),velocity(arg.velocity),rotSpeed(arg.rotSpeed),gun(nullptr)
+{
+	if(arg.gun!=nullptr)gun = arg.gun->clone();
+}
 Player::~Player()
 {
 	if(gun!=nullptr)delete gun;

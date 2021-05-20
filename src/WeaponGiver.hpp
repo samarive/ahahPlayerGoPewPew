@@ -9,6 +9,7 @@ class WeaponGiver:public Item
 {
 public:
 	WeaponGiver(std::string const& arg0="WGivy",sf::Vector2f const& arg1=sf::Vector2f(0.f,0.f),Weapon const& arg2=Rifle());
+	WeaponGiver(WeaponGiver const& arg);
 	virtual ~WeaponGiver();
 	virtual WeaponGiver * clone() const;
 

@@ -17,6 +17,8 @@ WeaponGiver::WeaponGiver(string const& arg0,Vector2f const& arg1,Weapon const& a
 		}
 	}
 }
+WeaponGiver::WeaponGiver(WeaponGiver const& arg):Item::Item(arg.getName(),arg.getPosition()),toGive(arg.toGive->clone())
+{}
 WeaponGiver::~WeaponGiver()
 {
 	if(toGive!=nullptr)delete toGive;
