@@ -1,6 +1,7 @@
 #include "Level.hpp"
 #include "WeaponGiver.hpp"
 #include "Mob.hpp"
+#include "Healing.hpp"
 #include <iostream>
 
 using namespace std;
@@ -49,7 +50,28 @@ void Level::paintOn(RenderWindow & arg)
 		arg.draw(*(*i));
 		if(!isInCam(*i))continue;
 		arg.setView(camera);
+		if((*i)->getHealth()<(*i)->getMaxHealth())
+		{
+			RectangleShape bar (Vector2f(100.f,16.f));
+			bar.setOrigin(Vector2f(50.f,8.f));
+			bar.setPosition((*i)->getPosition()-Vector2f(0.f,(*i)->getGlobalBounds().height/2.f+32.f));
+			bar.setFillColor(Color::White);
+			
+			RectangleShape lifeBar (Vector2f(98.f*((float) ((*i)->getHealth())/ (float) ((*i)->getMaxHealth())),14.f));
+			lifeBar.setPosition(bar.getPosition()-Vector2f(bar.getGlobalBounds().width,bar.getGlobalBounds().height)/2.f+Vector2f(1.f,1.f));
+			lifeBar.setFillColor(Color::Green);
+			
+			if((float) ((*i)->getHealth())/ (float) ((*i)->getMaxHealth())<0.5f)
+				lifeBar.setFillColor(Color(255,255,0));
+			if((float) ((*i)->getHealth())/ (float) ((*i)->getMaxHealth())<0.25f)
+				lifeBar.setFillColor(Color::Red);
+
+			arg.draw(bar);
+			arg.draw(lifeBar);
+
+		}
 		arg.draw(*(*i));
+
 	}
 
 	arg.setView(camera);
@@ -162,6 +184,11 @@ void Level::generate(int dimension,int proportion)
 				wG->setSize(Vector2f(128,64));
 				world.push_back(wG);
 			}
+			else if(rand()%20==0)
+			{
+				world.push_back(new Healing("generated",Vector2f(x*500+250,y*500+250)));
+				world.at(world.size()-1)->setSize(Vector2f(128,128));
+			}
 			if(rand()%20==0)
 			{
 				Mob * m = new Mob("generated",Vector2f(x*500+200,y*500+200));
@@ -199,6 +226,18 @@ void Level::generate(int dimension,int proportion)
 	}
 
 
+}
+
+vector<Packet> Level::getPacketVector()
+{
+	vector<Packet> toReturn;
+
+	for(int i (0);i<world.size();i++)
+	{
+		toReturn.push_back(world.at(i)->toPacket());
+	}
+
+	return toReturn;
 }
 
 bool Level::isInCam(Object* const& arg) const

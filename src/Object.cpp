@@ -9,7 +9,7 @@ sf::Texture * Object::base = nullptr;
 unsigned int Object::objectCount = 0;
 TexturePack* Object::texturePack = nullptr;
 
-Object::Object(string const& arg0,Vector2f const& arg1,int arg2):Sprite::Sprite(),name(arg0),health (arg2)
+Object::Object(string const& arg0,Vector2f const& arg1,int arg2):Sprite::Sprite(),name(arg0),health (arg2),maxHealth (arg2)
 {
 	Object::objectCount++;
 	
@@ -33,7 +33,7 @@ Object::Object(string const& arg0,Vector2f const& arg1,int arg2):Sprite::Sprite(
 
 	setPosition(arg1);
 }
-Object::Object(Object const& arg):Sprite(arg),speed(arg.speed),name(arg.name+"-Copy"),health(arg.health)
+Object::Object(Object const& arg):Sprite(arg),speed(arg.speed),name(arg.name+"-Copy"),health(arg.health),maxHealth(arg.maxHealth)
 {
 	Object::objectCount++;
 	setTexture(*base);
@@ -52,6 +52,7 @@ Object::~Object()
 Object* Object::clone() const {return new Object(*this);}
 
 int Object::getHealth() const {return health;}
+int Object::getMaxHealth() const {return maxHealth;}
 void Object::suffer(int arg)
 {
 	health-=arg;

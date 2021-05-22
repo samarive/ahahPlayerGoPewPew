@@ -15,6 +15,8 @@
 #include "Level.hpp"
 #include <cmath>
 #include <ctime>
+#include <cstring>
+
 
 using namespace std;
 using namespace sf;
@@ -31,7 +33,7 @@ using namespace sf;
 */
 
 
-int main()
+int main(int argc,char ** argv)
 {
 	srand(time(NULL));
 
@@ -39,7 +41,7 @@ int main()
 	basic.load("texturepacks/basic.txt");
 	Object::texturePack = &basic;
 	Level lvl;
-	lvl.generate(rand()%10+5,rand()%5+1);
+	lvl.generate(rand()%10+5,rand()%5+2);
 
 	RenderWindow win (VideoMode(800,450),"Player go PEW ! PEW !",Style::Fullscreen);
 	win.setFramerateLimit(60);
@@ -55,7 +57,7 @@ int main()
 			if(event.type==Event::KeyPressed && event.key.code==Keyboard::R)
 			{
 				lvl.empty();
-				lvl.generate(rand()%10+5,rand()%5+1);
+				lvl.generate(rand()%10+5,rand()%5+2);
 			}
 		}
 
@@ -69,6 +71,7 @@ int main()
 	}
 
 	lvl.empty();
+	
 
 	return 0;
 }

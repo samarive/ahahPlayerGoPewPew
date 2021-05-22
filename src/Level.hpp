@@ -24,6 +24,8 @@ public:
 	void empty();
 	void generate(int dimension,int proportion);
 
+	std::vector<sf::Packet> getPacketVector();
+
 private:
 	
 	bool isInCam(Object* const& arg) const;

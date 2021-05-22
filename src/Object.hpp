@@ -14,6 +14,7 @@ public:
 	virtual Object* clone() const;
 
 	int getHealth() const;
+	int getMaxHealth() const;
 	void suffer(int arg);
 
 	sf::Vector2f getSpeed() const;
@@ -22,7 +23,7 @@ public:
 	virtual void update();//༼ つ ◕_◕ ༽つ
 	void setSize(sf::Vector2f const& arg);//scale and set origin to center
 
-	sf::Packet toPacket() const;//packet contains name;toString;position (x and y);size (x and y);health
+	virtual sf::Packet toPacket() const;//packet contains name;toString;position (x and y);size (x and y);health
 
 	virtual bool collide(Object & arg);
 
@@ -40,7 +41,9 @@ private:
 
 	sf::Vector2f speed;
 	std::string name;
+
 	int health;
+	int maxHealth;
 
 	static sf::Texture * base;
 	static unsigned int objectCount;

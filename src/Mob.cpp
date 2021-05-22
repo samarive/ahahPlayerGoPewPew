@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1)
+Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1),seen("none"),hand(rand()%2)
 {
 	if(Object::texturePack!=nullptr)
 	{
@@ -21,81 +21,113 @@ Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1)
 Mob::~Mob() {}
 Mob * Mob::clone() const {return new Mob(*this);}
 
+void Mob::update()
+{
+	Player::update();
+
+	seen = "none";
+}
+
 bool Mob::collide(Object & arg)
 {
 
-	Vector2f rays[16];
-
 	FloatRect oth (arg.getGlobalBounds());
 
+	Vector2f direction (0.f,0.f);
+	float distance (0.f);
 
-	//AI
-	for(int i (0);i<8;i++)
+	bool collided (false);
+
+	//Eyes
 	{
-		rays[i] = getPosition();
-		Vector2f rayDir (cos((float) (i)*3.141592654f/4.f),sin((float) (i)*3.141592654f/4.f));
-	
-		float rayVelocity (10.f);
-		float traveled (0.f);
 
-		rayDir*=rayVelocity;
+		direction = arg.getPosition()-getPosition();
+		distance = sqrt(pow(direction.x,2)+pow(direction.y,2));
+		direction/=distance;
 
-		bool collided (false);
-
-		while(traveled<512.f and !collided)
+		if(distance<1000.f)
 		{
-			rays[i]+=rayDir;
-			traveled+=rayVelocity;
-
-			collided = (rays[i].x>oth.left
-				&& rays[i].x<oth.left+oth.width
-				&& rays[i].y>oth.top
-				&& rays[i].y<oth.top+oth.height);
+			collided = true;
 		}
 
-		if(collided)
+	}
+	//AI
+
+	if(collided)
+	{
+
+		map<string,int> priority;
+		priority.insert(pair<string,int>("object item healing",0));
+		priority.insert(pair<string,int>("object item weapon_giver",1));
+		priority.insert(pair<string,int>("object bullet",2));
+		priority.insert(pair<string,int>("object player",3));
+		priority.insert(pair<string,int>("object wall",4));
+		
+
+		string found (arg.toString());
+
+		try
 		{
-			if(arg.toString().find("bullet")!=string::npos)
+			if(seen=="none" || priority.at(seen)>=priority.at(found))
 			{
-				Bullet const* b ((Bullet*) &arg);
-
-				float sign ((float) (rand()%2-1));
-				if(sign==0.f)sign = 1.f;
-
-				if(b->getOwner()!=this)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity()*sign);
-				break;
-			}
-			if(arg.toString().find("wall")!=string::npos)
-			{
-				if(traveled<100.f)
+				if(found.find("item")!=string::npos)
 				{
-					setSpeed((-rayDir/rayVelocity)*getVelocity());//Normal to rayDir
+					setSpeed(direction*getVelocity());
 				}
-			}
-			if(arg.toString().find("player")!=string::npos && arg.toString().find("mob")==string::npos)
-			{
-				if(traveled<200)setSpeed((Vector2f(-rayDir.y,rayDir.x)/rayVelocity)*getVelocity());
-				else setSpeed((Vector2f(rayDir.x,rayDir.y)/rayVelocity)*getVelocity());
-
-				float diff ((180.f/3.141592654f)*(float) (i)*3.141592654f/4.f - getRotation());
-
-				if(diff > 12.5f)
-					setAction(Player::RotatePos);
-				else if(diff < -12.5f)
-					setAction(Player::RotateNeg);
-				else
+				if(found.find("bullet")!=string::npos)
 				{
-					setAction(Player::StopRot);
-					setAction(Player::Shoot);
+					Bullet * b ((Bullet*) &arg);
+					if(b->getOwner()!=this && distance<200.f)
+					{
+						setSpeed(Vector2f(-direction.y,direction.x)*getVelocity());
+						if(hand)setSpeed(-getSpeed());
+					}
 				}
+				if (found.find("player")!=string::npos && found.find("mob")==string::npos)
+				{
+					float rayAngle (acos(direction.x));
+					if(direction.y<0)rayAngle = -rayAngle;
+
+					rayAngle*=(180.f/3.141592654f);
+
+					if(getRotation()<rayAngle)
+						setAction(Player::RotatePos);
+					else
+						setAction(Player::RotateNeg);
+					if(abs(getRotation()-rayAngle)<15.f)
+					{
+						setAction(Player::StopRot);
+						setAction(Player::Shoot);
+					}
+
+					if(distance<400.f)
+					{
+						setSpeed(Vector2f(-direction.y,direction.x)*getVelocity());//Turn around player
+						if(hand)setSpeed(-getSpeed());
+					}
+					else
+					{
+						setSpeed(direction*getVelocity());
+					}
+				}
+				if (found.find("wall")!=string::npos)
+				{
+					if(distance<50.f)
+					{
+						int sign (rand()%2-1);
+						if(sign==0)sign=1;
+
+						setSpeed(Vector2f(-direction.y,direction.x)*getVelocity()* (float) sign);
+					}
+				}
+
+				seen = arg.toString();
 			}
-		}
-		if(collided && getSpeed().x == 0.f && getSpeed().y == 0.f)
-		{
-			setAction(Player::None);
-			float dirX ((float) (rand()%200-100)/100.f);
-			setSpeed(Vector2f(dirX,sqrt(1.f-dirX))*getVelocity());
-		}
+			
+			
+		}catch(exception const& e)
+		{}
+
 	}
 
 	return Player::collide(arg);

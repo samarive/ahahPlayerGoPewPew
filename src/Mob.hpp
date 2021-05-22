@@ -12,9 +12,14 @@ public:
 
 
 	//Override
+	virtual void update();
 	virtual bool collide(Object & arg);
 	virtual std::string toString() const;
 
+private:
+
+	bool hand;//Preferred hand (i ma personnaly right handed)
+	std::string seen;
 };
 
 
