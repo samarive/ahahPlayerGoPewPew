@@ -18,8 +18,9 @@ public:
 
 private:
 
-	bool hand;//Preferred hand (i ma personnaly right handed)
+	bool hand;//Preferred hand (I am personnaly right handed)
 	std::string seen;
+
 };
 
 

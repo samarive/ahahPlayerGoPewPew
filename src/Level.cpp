@@ -18,6 +18,7 @@ Level::~Level()
 
 void Level::tick()
 {
+
 	if(world.size()>0)camera.move(Vector2f(world.at(0)->getPosition()-camera.getCenter())/10.f);
 
 	for(vector<Object*>::iterator i (world.begin());i!=world.end();i++)
@@ -35,9 +36,12 @@ void Level::tick()
 
 		if((*i)->getHealth()<=0)
 		{
+			delete *i;
 			world.erase(i);
 			i--;
 		}
+
+		if(Keyboard::isKeyPressed(Keyboard::LShift) && (*i)->toShortString()=="mob")cout << "coucou" << endl;
 	}
 }
 void Level::paintOn(RenderWindow & arg)
@@ -191,33 +195,34 @@ void Level::generate(int dimension,int proportion)
 			}
 			if(rand()%20==0)
 			{
-				Mob * m = new Mob("generated",Vector2f(x*500+200,y*500+200));
+				Mob * m = new Mob("generated"+to_string(x*y),Vector2f(x*500+200,y*500+200));
 				m->setGun(Rifle());
 				m->setSize(Vector2f(100,100));
+				
 				world.push_back(m);
 			}
 			
 			if(x==0 || (rooms[y][x]==true && x>0 && rooms[y][x-1]==false))
 			{
-				Wall * wall = new Wall("generated",Vector2f(x*500+32,y*500+250));
+				Wall * wall = new Wall("generated",Vector2f(x*500+32,y*500+250),10000);
 				wall->setSize(Vector2f(64,500));
 				world.push_back(wall);
 			}
 			if(x==dimension-1 || (rooms[y][x]==true && x<dimension-1 && rooms[y][x+1]==false))
 			{
-				Wall * wall = new Wall("generated",Vector2f(x*500+532,y*500+250));
+				Wall * wall = new Wall("generated",Vector2f(x*500+532,y*500+250),10000);
 				wall->setSize(Vector2f(64,500));
 				world.push_back(wall);
 			}
 			if(y==0 || (rooms[y][x]==true && y>0 && rooms[y-1][x]==false))
 			{
-				Wall * wall = new Wall("generated",Vector2f(x*500+250,y*500+32));
+				Wall * wall = new Wall("generated",Vector2f(x*500+250,y*500+32),10000);
 				wall->setSize(Vector2f(500,64));
 				world.push_back(wall);
 			}
 			if(y==dimension-1 || (rooms[y][x]==true && y<dimension-1 && rooms[y+1][x]==false))
 			{
-				Wall * wall = new Wall("generated",Vector2f(x*500+250,y*500+532));
+				Wall * wall = new Wall("generated",Vector2f(x*500+250,y*500+532),10000);
 				wall->setSize(Vector2f(500,64));
 				world.push_back(wall);
 			}

@@ -5,8 +5,10 @@
 using namespace sf;
 using namespace std;
 
-Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1),seen("none"),hand(rand()%2)
+Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1),seen("none")
 {
+	hand = (rand()%2==1);
+
 	if(Object::texturePack!=nullptr)
 	{
 		Texture * pack (Object::texturePack->getTextureFor(toShortString()));
@@ -42,17 +44,20 @@ bool Mob::collide(Object & arg)
 	{
 
 		direction = arg.getPosition()-getPosition();
-		distance = sqrt(pow(direction.x,2)+pow(direction.y,2));
+
+		distance = (float) sqrt(pow(direction.x,2)+pow(direction.y,2));
+		
+		if(distance==0)return false;
+
 		direction/=distance;
 
 		if(distance<1000.f)
 		{
 			collided = true;
 		}
-
 	}
 	//AI
-
+	
 	if(collided)
 	{
 
@@ -62,10 +67,8 @@ bool Mob::collide(Object & arg)
 		priority.insert(pair<string,int>("object bullet",2));
 		priority.insert(pair<string,int>("object player",3));
 		priority.insert(pair<string,int>("object wall",4));
-		
 
 		string found (arg.toString());
-
 		try
 		{
 			if(seen=="none" || priority.at(seen)>=priority.at(found))
@@ -76,10 +79,11 @@ bool Mob::collide(Object & arg)
 				}
 				if(found.find("bullet")!=string::npos)
 				{
-					Bullet * b ((Bullet*) &arg);
-					if(b->getOwner()!=this && distance<200.f)
+					if(distance<200.f)
 					{
-						setSpeed(Vector2f(-direction.y,direction.x)*getVelocity());
+						setSpeed(Vector2f(-direction.y,direction.x));
+						
+						setSpeed(getSpeed()*getVelocity());
 						if(hand)setSpeed(-getSpeed());
 					}
 				}

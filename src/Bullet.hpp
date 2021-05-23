@@ -26,7 +26,7 @@ protected:
 	void setVelocity(float arg);
 private:
 
-	Object* owner;//Owner is the first object being collided
+	Object const* owner;//Owner is the first object being collided
 	int damages;//can be negative
 	float velocity;
 	float angleDerivation;//Adds up to the calculated trajectory angle

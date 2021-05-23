@@ -1,4 +1,5 @@
 #include "WeaponGiver.hpp"
+#include <iostream>
 
 using namespace sf;
 using namespace std;
@@ -27,7 +28,8 @@ WeaponGiver * WeaponGiver::clone() const {return new WeaponGiver(*this);}
 
 void WeaponGiver::affect(Player & arg)
 {
-	arg.setGun(*toGive);
+	cout << "WeaponGiver affect to " << arg.getName() << endl;
+	if(toGive!=nullptr)arg.setGun(*toGive);
 	setHealth(0);
 }
 
