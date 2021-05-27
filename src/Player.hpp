@@ -28,7 +28,7 @@ public:
 		StopRot
 	};
 
-	Player(std::string const& arg="Player",sf::Vector2f const& arg0=sf::Vector2f(0.f,0.f)/*Position*/);
+	Player(std::string const& arg="Player",sf::Vector2f const& arg0=sf::Vector2f(0.f,0.f)/*Position*/,int arg1=100);
 	Player(Player const& arg);
 	virtual ~Player();
 	virtual Player* clone() const;

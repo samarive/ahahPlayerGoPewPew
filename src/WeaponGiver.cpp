@@ -28,7 +28,6 @@ WeaponGiver * WeaponGiver::clone() const {return new WeaponGiver(*this);}
 
 void WeaponGiver::affect(Player & arg)
 {
-	cout << "WeaponGiver affect to " << arg.getName() << endl;
 	if(toGive!=nullptr)arg.setGun(*toGive);
 	setHealth(0);
 }

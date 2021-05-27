@@ -125,7 +125,10 @@ bool Object::collide(Object & arg)
 
 		dis.left+=speed.x;
 		dis.top+=speed.y;
-		  
+		
+		oth.left+=arg.getSpeed().x;
+		oth.top+=arg.getSpeed().y;
+
 		if(dis.left>oth.left+oth.width 
 		|| dis.left+dis.width<oth.left      
 		|| dis.top>oth.top+oth.height         
@@ -188,10 +191,10 @@ bool Object::collide(Object & arg)
 	  		inRef = Vector2f(cos(angle),sin(angle));
 	  		inRef*=norm;
 
-	  		if(inRef.x<dimensions.x/2.f
-	  		&& inRef.x>-dimensions.x/2.f
-	  		&& inRef.y<dimensions.y/2.f
-	  		&& inRef.y>-dimensions.y/2.f)
+	  		if(inRef.x<dimensions.x/2.f+arg.getSpeed().x
+	  		&& inRef.x>-dimensions.x/2.f+arg.getSpeed().x
+	  		&& inRef.y<dimensions.y/2.f+arg.getSpeed().y
+	  		&& inRef.y>-dimensions.y/2.f+arg.getSpeed().y)
 	  		{
 
 	  			if(toString().find("bullet")==string::npos && arg.toString().find("bullet")==string::npos)setSpeed(Vector2f(0.f,0.f));

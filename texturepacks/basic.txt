@@ -6,3 +6,4 @@ item:img/flare.png
 shotgun_giver:img/shotgun.png
 mob:img/blue_man.png
 healing:img/heart.png
+turret:img/turret.png

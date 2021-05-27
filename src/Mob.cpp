@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-Mob::Mob(string const& arg0,Vector2f const& arg1):Player::Player(arg0,arg1),seen("none")
+Mob::Mob(string const& arg0,Vector2f const& arg1,int arg2):Player::Player(arg0,arg1,arg2),seen("none")
 {
 	hand = (rand()%2==1);
 
@@ -33,6 +33,15 @@ void Mob::update()
 bool Mob::collide(Object & arg)
 {
 
+	think(arg);
+
+	return Player::collide(arg);
+}
+string Mob::toString() const {return Player::toString()+" mob";}
+
+
+void Mob::think(Object & arg)
+{
 	FloatRect oth (arg.getGlobalBounds());
 
 	Vector2f direction (0.f,0.f);
@@ -47,7 +56,7 @@ bool Mob::collide(Object & arg)
 
 		distance = (float) sqrt(pow(direction.x,2)+pow(direction.y,2));
 		
-		if(distance==0)return false;
+		if(distance==0)return;
 
 		direction/=distance;
 
@@ -90,7 +99,7 @@ bool Mob::collide(Object & arg)
 				if (found.find("player")!=string::npos && found.find("mob")==string::npos)
 				{
 					float rayAngle (acos(direction.x));
-					if(direction.y<0)rayAngle = -rayAngle;
+					if(direction.y<0)rayAngle = 2.f*3.141592654f-rayAngle;
 
 					rayAngle*=(180.f/3.141592654f);
 
@@ -133,7 +142,4 @@ bool Mob::collide(Object & arg)
 		{}
 
 	}
-
-	return Player::collide(arg);
 }
-string Mob::toString() const {return Player::toString()+" mob";}

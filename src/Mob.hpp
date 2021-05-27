@@ -6,7 +6,7 @@
 class Mob:public Player
 {
 public:
-	Mob(std::string const& arg0,sf::Vector2f const& arg1);
+	Mob(std::string const& arg0="moby",sf::Vector2f const& arg1=sf::Vector2f(0.f,0.f),int arg2=100);
 	virtual ~Mob();
 	virtual Mob * clone() const;
 
@@ -15,6 +15,10 @@ public:
 	virtual void update();
 	virtual bool collide(Object & arg);
 	virtual std::string toString() const;
+
+protected:
+
+	virtual void think(Object & arg);
 
 private:
 

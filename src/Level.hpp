@@ -26,13 +26,19 @@ public:
 
 	std::vector<sf::Packet> getPacketVector();
 
+	sf::Texture& getBackground();
+
+	//For fun
+	void rayCast(sf::RenderWindow & arg);
+
 private:
 	
 	bool isInCam(Object* const& arg) const;
 
 	std::vector<Object*> world;
 	sf::View camera;
-	
+
+	sf::Texture background;
 };
 
 #endif

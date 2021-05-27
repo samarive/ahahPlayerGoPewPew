@@ -17,7 +17,6 @@
 #include <ctime>
 #include <cstring>
 
-
 using namespace std;
 using namespace sf;
 
@@ -42,11 +41,13 @@ int main(int argc,char ** argv)
 	Object::texturePack = &basic;
 	Level lvl;
 	lvl.generate(rand()%10+5,rand()%5+2);
+	lvl.getBackground().loadFromFile("img/tile.png");
 
 	RenderWindow win (VideoMode(800,450),"Player go PEW ! PEW !",Style::Fullscreen);
 	win.setFramerateLimit(60);
-
 	
+	bool firstPerson (false);
+
 	while(win.isOpen())
 	{
 		Event event;
@@ -59,13 +60,15 @@ int main(int argc,char ** argv)
 				lvl.empty();
 				lvl.generate(rand()%10+5,rand()%5+2);
 			}
+			if(event.type==Event::KeyPressed && event.key.code==Keyboard::F5)firstPerson = !firstPerson;
 		}
+		
 
 		lvl.tick();
 
 		win.clear();
 
-		lvl.paintOn(win);
+		firstPerson?lvl.rayCast(win):lvl.paintOn(win);
 
 		win.display();
 	}

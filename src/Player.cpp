@@ -7,7 +7,7 @@
 using namespace std;
 using namespace sf;
 
-Player::Player(string const& arg,Vector2f const& arg0):Object::Object(arg,arg0),velocity(10.f),rotSpeed(0.f),gun(nullptr)
+Player::Player(string const& arg,Vector2f const& arg0,int arg1):Object::Object(arg,arg0,arg1),velocity(10.f),rotSpeed(0.f),gun(nullptr)
 {
 	if(Object::texturePack!=nullptr)
 	{
