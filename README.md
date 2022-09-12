@@ -14,8 +14,4 @@
  Linux
       <code>g++ src/*.cpp -o output.out -lsfml-network -lsfml-graphics -lsfml-window -lsfml-system</code>
                                              
-                                             
-                                                ↑
-                                                
-                                                
-                                            Yes, useless, but yes.
+                           
